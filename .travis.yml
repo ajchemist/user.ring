@@ -1,0 +1,78 @@
+dist: trusty
+language: java
+
+
+jdk:
+  - openjdk11
+  - openjdk8
+  # - oraclejdk11
+  # - oraclejdk8
+
+
+env:
+  matrix:
+    # - TESTOPT="-R:1.9 -A:provided:test:test-runner"
+    - TESTOPT="-R:1.10 -A:provided:test:test-runner"
+    # - TESTOPT="-R:1.9 -A:provided:test:eastwood"
+    - TESTOPT="-R:1.10 -A:provided:test:eastwood"
+
+
+install:
+  - install_script=linux-install-1.10.1.536.sh
+  - curl -LO https://download.clojure.org/install/$install_script
+  - chmod +x $install_script
+  - sudo ./$install_script
+  - rm $install_script
+  - export PATH=/usr/local/bin:$PATH
+  - which gpg
+  - which mvn
+  - cp .ci/settings.xml $HOME/.m2/
+
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gitlibs
+
+
+script: clojure $TESTOPT
+
+
+jobs:
+  include:
+    - stage: package
+      jdk: openjdk11
+      env: TESTOPT=""
+      script: clojure -A:provided:test -m user.tools.deps.script.package -r user.ring
+      before_cache:
+        - mvn dependency:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.8
+      after_success:
+        - git config --local user.name "ajchemist"
+        - git config --local user.email "1694505+aJchemist@users.noreply.github.com"
+        - eval $(ssh-agent -s)
+        - ssh-add <(openssl aes-256-cbc -K $encrypted_9c13144ab081_key -iv $encrypted_9c13144ab081_iv -in .ci/deploy-key.enc -d)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan github.com >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - git checkout master
+        - git add -- pom.xml
+        - git commit -m "$(clojure -A:provided:test -m user.apache.maven.script.get-pom-version) [ci skip]"
+        - git remote add origin-ssh "git@github.com:ajchemist/user.ring"
+        - git remote -v
+        - git push -v -u origin-ssh master:refs/heads/master
+      deploy:
+        provider: script
+        skip_cleanup: true
+        on:
+          branch: master
+          jdk: openjdk11
+        script: mvn deploy:deploy-file -Dclojars.username="$CLOJARS_USERNAME" -Dclojars.password="$CLOJARS_PASSWORD" -DpomFile="pom.xml" -Dfile="target/package.jar" -Dpackaging=jar -DrepositoryId="clojars" -Durl="https://clojars.org/repo"
+
+
+notifications:
+  slack:
+    rooms:
+      - secure: "abb+J097gd3GHMtZLYAAKheNQVYArJY2hLq5JNLQMJnCHh7aCmy4Kmd0Phwo8kha6Fi4Ii4/81OIxS8mgrpTEqMUaccng1DkqM2pGYSwI4a6DRRgUEo87+Pvbuk7mDAMAD+TdE7xjY2KOfIVmXMeg4HlPRLe1SjbODg/u082Bc2RtRua/P1F3r+8frzMPUIQs77XKJdhaK3KcCNUUnpigUGFPngy8EcVK7EyjXyuOvZxDePojEzP98vswGnCEu1zMDMavUZ+Di0smqDE0pYhZnQmgglH79+0O3djeYxl76F+dt0ANwdMH1bKa8IpkcjHzU1CVYIIJbPPiggLr+nR5ltLuJkWe2nAsKoHZ6kGpuXAhTdFtHibjoeQeRk8lt/IJtZ39UD5n9EO6FiL2IfBWIVkjH4a3rhb7T/nHawS6itRjZijcUGdvnfVe7yvUmomBvl2fPX4Gc/A4PtVBNpEdlp7JnTs9i6Eah+Cy7wG2jAHXZojNHD1H48JOH39o7QUQVgLomG6Tt1sqFZXJ+8R/DPbkjY2I+byMYrDdO4ntIonoD1lGvipH6pZwRVH/JG31J6Gn6Pjf57F+OeNfX3h5a/UTKvOBoDvuu83H4rw8VRLxPwb3+aEO3kTwjIhPypqcLCO4vK12P6zNhQ4ERW1Q+ud1SQRE67ZCFjZuuGhpU8="
+    on_success: always
+    on_failure: always
