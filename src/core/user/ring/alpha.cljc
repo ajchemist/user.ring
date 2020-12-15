@@ -128,7 +128,7 @@
 
 (defn content-type
   "Returns the value of the Content-Type header of `request`."
-  [{:keys [headers] :as request}]
+  [{:keys [headers]}]
   (let [content-type (get headers "content-type")]
-    (if-not (str/blank? content-type)
+    (when-not (str/blank? content-type)
       (keyword (str/replace content-type #";.*" "")))))

@@ -10,7 +10,7 @@
   ([response request]
    (content-type-response response request {}))
   ([response {:keys [uri]} options]
-   (if response
+   (when response
      (if (response/get-header response "Content-Type")
        response
        ;; this is brought from

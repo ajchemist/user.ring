@@ -81,7 +81,7 @@
 
 
 (defn- format-access-token
-  [{{:keys [access_token expires_in refresh_token id_token] :as body} :body :as request}]
+  [{{:keys [access_token expires_in refresh_token id_token] :as body} :body}]
   (cond-> {:_raw body}
     access_token  (assoc :token access_token)
     expires_in    (assoc :expires (Date/from (.plusSeconds (Instant/now) (long expires_in))))
@@ -111,7 +111,7 @@
 
 (defn- make-launch-handler
   [profile]
-  (fn [{:keys [session] :or {session {}} :as request}]
+  (fn [{:as request}]
     (let [state (random-state)]
       (-> (resp/redirect (authorize-uri profile request state))
         (assoc-in [:session ::state] state)))))
