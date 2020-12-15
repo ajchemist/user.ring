@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>user.ring</groupId>
   <artifactId>user.ring</artifactId>
-  <version>2020.177.31291</version>
+  <version>2020.350.53242</version>
   <repositories>
     <repository>
       <id>clojars</id>
