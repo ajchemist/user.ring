@@ -1,0 +1,28 @@
+{:linters
+ {:unused-namespace
+  {:exclude [
+             clojure.java.io
+             clojure.java.shell
+             clojure.string
+             clojure.test
+             garden.color
+             garden.core
+             garden.def
+             garden.arithmetic
+             ]}
+  :unused-referred-var
+  {:exclude {
+             clojure.test      [is are deftest testing]
+             garden.def        [defcssfn defrule defstyles defkeyframes]
+             garden.color      [hsl hsla rgb color-name->hex]
+             garden.units      [px pt em vw percent]
+             user.garden.patch [defstylesfn defstylesheetfn]
+             }}}
+
+
+ :lint-as
+ {
+  clojure.core.cache/defcache       clojure.core/defrecord
+  user.garden.patch/defstylesfn     clojure.core/defn
+  user.garden.patch/defstylesheetfn clojure.core/defn
+  }}

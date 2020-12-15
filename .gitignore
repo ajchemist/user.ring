@@ -7,3 +7,7 @@ cljs-test-runner-out
 .ci/deploy-key
 .ci/deploy-key.pub
 /src/test.wip
+.clj-kondo/.cache
+
+
+.obsolete
