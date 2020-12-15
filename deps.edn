@@ -12,11 +12,12 @@
   :provided
   {:extra-deps
    {
-    ring/ring-core      {:mvn/version "1.8.2"}
-    ring/ring-mock      {:mvn/version "0.3.2"}
-    clj-http/clj-http   {:mvn/version "3.11.0"}
-    cheshire/cheshire   {:mvn/version "5.10.0"}
-    integrant/integrant {:mvn/version "0.8.0"}
+    ring/ring-core          {:mvn/version "1.8.2"}
+    ring/ring-mock          {:mvn/version "0.3.2"}
+    ring/ring-jetty-adapter {:mvn/version "1.8.2"}
+    clj-http/clj-http       {:mvn/version "3.11.0"}
+    cheshire/cheshire       {:mvn/version "5.10.0"}
+    integrant/integrant     {:mvn/version "0.8.0"}
     }}
 
 
