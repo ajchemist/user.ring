@@ -102,17 +102,18 @@
 ;; * meta
 
 
-(defn wrap-meta-response
-  [handler]
-  (letfn [(f [{:keys [body] :as response}]
-            (if (instance? clojure.lang.IMeta body)
-              (with-meta body (dissoc response :body))
-              response))]
-    (fn
-      ([request]
-       (f (handler request)))
-      ([request respond raise]
-       (handler request #(respond (f %)) raise)))))
+#?(:clj
+   (defn wrap-meta-response
+     [handler]
+     (letfn [(f [{:keys [body] :as response}]
+               (if (instance? clojure.lang.IMeta body)
+                 (with-meta body (dissoc response :body))
+                 response))]
+       (fn
+         ([request]
+          (f (handler request)))
+         ([request respond raise]
+          (handler request #(respond (f %)) raise))))))
 
 
 ;; * content-type
