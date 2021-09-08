@@ -128,7 +128,7 @@
 (defn- make-redirect-handler
   [{:keys [id landing-uri] :as profile}]
   (let [state-handler (:state-mismatch-handler profile state-mismatch-handler)]
-    (fn [{:keys [session] :or {session {}} :as request}]
+    (fn [{:as request}]
       (if (state-matches? request)
         (let [access-token (get-access-token profile request)]
           (-> (resp/redirect landing-uri)
