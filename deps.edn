@@ -12,10 +12,10 @@
   :provided
   {:extra-deps
    {
-    ring/ring-core          {:mvn/version "1.8.2"}
+    ring/ring-core          {:mvn/version "1.9.4"}
     ring/ring-mock          {:mvn/version "0.3.2"}
-    ring/ring-jetty-adapter {:mvn/version "1.8.2"}
-    clj-http/clj-http       {:mvn/version "3.11.0"}
+    ring/ring-jetty-adapter {:mvn/version "1.9.4"}
+    clj-http/clj-http       {:mvn/version "3.12.3"}
     cheshire/cheshire       {:mvn/version "5.10.0"}
     integrant/integrant     {:mvn/version "0.8.0"}
     }}
@@ -25,25 +25,25 @@
   {:extra-paths ["src/test"]
    :extra-deps
    {
-    org.clojure/tools.cli        {:mvn/version "1.0.194"}
+    org.clojure/tools.cli        {:mvn/version "1.0.206"}
     org.clojure/tools.deps.alpha {:mvn/version "0.8.677"}
     user.java.time               {:git/url "https://github.com/aJchemist/user.java.time.git" :sha "68aaf15bbef09c96dc2cb02d9e2f2a7d9e7cfd30"}
     user.tools.deps.alpha        {:git/url "https://github.com/aJchemist/user.tools.deps.alpha.git" :sha "14d099e738cda8d59e99ab8fbaf31834c29bc072"}
 
 
     clj-chrome-devtools     {:mvn/version "20180528"}
-    com.taoensso/timbre     {:mvn/version "4.10.0"}
-    ring/ring-devel         {:mvn/version "1.8.1"}
-    ring/ring-jetty-adapter {:mvn/version "1.8.1"}
+    com.taoensso/timbre     {:mvn/version "5.1.2"}
+    ring/ring-devel         {:mvn/version "1.9.4"}
+    ring/ring-jetty-adapter {:mvn/version "1.9.4"}
     stylefruits/gniazdo     {:mvn/version "1.1.1"}
     }}
 
 
   :test-runner
-  {:extra-deps {com.cognitect/test-runner
-                {:git/url "https://github.com/cognitect-labs/test-runner"
-                 :sha     "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}}
-   :main-opts  ["-m" "cognitect.test-runner" "-d" "src/test"]}
+  {:extra-paths ["test"]
+   :extra-deps  {io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
+   :main-opts   ["-m" "cognitect.test-runner"]
+   :exec-fn     cognitect.test-runner.api/test}
 
 
   :cljs-test-runner
