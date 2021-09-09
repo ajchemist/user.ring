@@ -8,6 +8,11 @@ on:
     branches: [ master ]
 
 
+env:
+  clojure-cli: "1.10.3.967"
+  library: io.github.ajchemist/user.ring
+
+
 jobs:
   test:
     if: "!(contains(github.event.head_commit.message, 'ci skip') || contains(github.event.head_commit.message, 'skip ci'))"
@@ -45,13 +50,23 @@ jobs:
       - name: Set up clojure-cli
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: '1.10.3.967'
+          cli: ${{ env.clojure-cli }}
 
 
       - name: Test runner
         env:
           TESTOPT: "-X:${{ matrix.clojure }}:provided:test:test-runner"
         run: clojure $TESTOPT
+
+
+      - name: Job digest -> telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+          JOB_CONTEXT: ${{ toJSON(job) }}
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          clojure -X:provided:test:github-actions-helper telegram-job-digest
 
 
   package:
@@ -92,13 +107,12 @@ jobs:
       - name: Set up clojure-cli
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: '1.10.3.967'
+          cli: ${{ env.clojure-cli }}
 
 
       - name: Make package
-        env:
-          LIBRARY: user.ring
-        run: clojure -M:1.10:provided:test -m user.tools.deps.script.package -r $LIBRARY
+        run: |
+          clojure -T:provided:build jar :lib ${{ env.library }}
 
 
       - name: Deploy
@@ -113,9 +127,19 @@ jobs:
           git config --local user.name "aJchemist"
           git config --local user.email "1694505+aJchemist@users.noreply.github.com"
           git add -u -- pom.xml
-          git commit -m "$(clojure -M:provided:test -m user.apache.maven.script.get-pom-version) [ci skip]"
+          git commit -m "$(clojure -X:build:maven-tool print-pom-version) [ci skip]"
           git remote -v
           git push
+
+
+      - name: Job digest -> telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+          JOB_CONTEXT: ${{ toJSON(job) }}
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          clojure -X:provided:test:github-actions-helper telegram-job-digest
 
 
       - uses: 8398a7/action-slack@v3.5.0
