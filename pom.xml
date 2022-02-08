@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>user.ring</groupId>
+  <groupId>io.github.ajchemist</groupId>
   <artifactId>user.ring</artifactId>
-  <version>2021.251.7880</version>
+  <version>2021.252.19860</version>
   <repositories>
     <repository>
       <id>clojars</id>
@@ -14,4 +13,15 @@
   <build>
     <sourceDirectory>src/core</sourceDirectory>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+      <version>1.10.3</version>
+    </dependency>
+  </dependencies>
+  <name>user.ring</name>
+  <scm>
+    <url>https://github.com/ajchemist/user.ring</url>
+  </scm>
 </project>
