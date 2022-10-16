@@ -1,17 +1,14 @@
 {:paths ["src/core"]
  :deps
  {
+  ring/ring-core {:mvn/version "1.9.6"}
   }
  :aliases
  {
   :provided
   {:extra-deps
    {
-    ring/ring-core          {:mvn/version "1.9.6"}
-    ring/ring-mock          {:mvn/version "0.4.0"}
     ring/ring-jetty-adapter {:mvn/version "1.9.6"}
-    clj-http/clj-http       {:mvn/version "3.12.3"}
-    cheshire/cheshire       {:mvn/version "5.11.0"}
     integrant/integrant     {:mvn/version "0.8.0"}
     }}
 
@@ -20,10 +17,13 @@
   {:extra-paths ["src/test"]
    :extra-deps
    {
+    cheshire/cheshire                       {:mvn/version "5.11.0"}
     clj-chrome-devtools/clj-chrome-devtools {:mvn/version "20220405"}
+    clj-http/clj-http                       {:mvn/version "3.12.3"}
     com.taoensso/timbre                     {:mvn/version "5.2.1"}
     ring/ring-devel                         {:mvn/version "1.9.6"}
     ring/ring-jetty-adapter                 {:mvn/version "1.9.6"}
+    ring/ring-mock                          {:mvn/version "0.4.0"}
     stylefruits/gniazdo                     {:mvn/version "1.2.1"}
     }}
 
