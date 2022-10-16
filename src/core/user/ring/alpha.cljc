@@ -163,13 +163,13 @@
 
 #?(:clj
    (defn wrap-path-component
-     [handler ext-param-key component-name read-component]
+     [handler ext-param-key component-name read-component & [nf]]
      {:pre [(keyword? ext-param-key) (fn? read-component)]}
      (wrap-transform-request
        handler
        (fn [request]
          (try
-           (let [component (path-component request component-name)]
+           (let [component (or (path-component request component-name) nf)]
              (cond-> request
                (some? component)
                (assoc ext-param-key (read-component component))))
