@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.ajchemist</groupId>
   <artifactId>user.ring</artifactId>
-  <version>2022.289.46571</version>
+  <version>2022.289.46906</version>
   <repositories>
     <repository>
       <id>clojars</id>
@@ -18,6 +18,11 @@
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
       <version>1.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>ring</groupId>
+      <artifactId>ring-core</artifactId>
+      <version>1.9.6</version>
     </dependency>
   </dependencies>
   <name>user.ring</name>
