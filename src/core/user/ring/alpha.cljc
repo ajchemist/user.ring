@@ -1,7 +1,10 @@
 (ns user.ring.alpha
   (:require
    [clojure.string :as str]
-   ))
+   #?@(:clj
+       [[ring.util.request :as request]
+        [user.ring.alpha.util :as util]]
+       )))
 
 
 ;; * routing
@@ -97,6 +100,61 @@
      (f req (handler req)))
     ([req respond raise]
      (handler req #(respond (f req %)) raise))))
+
+
+;; * file-or-resource
+
+
+(def ^:dynamic *context-dir* nil)
+
+
+(defn wrap-context-dir
+  [handler context-dir]
+  (fn
+    ([request]
+     (binding [*context-dir* context-dir]
+       (handler request)))
+    ([request respond raise]
+     (binding [*context-dir* context-dir]
+       (handler request respond raise)))))
+
+
+#?(:clj
+   (defn file
+     [path]
+     (util/file *context-dir* path)))
+
+
+#?(:clj
+   (defn file-or-resource
+     [path]
+     (util/file-or-resource *context-dir* path)))
+
+
+#?(:clj
+   (defn path-component
+     [request component-name]
+     (let [path        (request/path-info request)
+           config-path (if (str/ends-with? path "/")
+                         (str path component-name)
+                         (str path "." component-name))]
+       (file-or-resource config-path))))
+
+
+#?(:clj
+   (defn wrap-path-component
+     [handler ext-param-key component-name read-component]
+     {:pre [(keyword? ext-param-key) (fn? read-component)]}
+     (wrap-transform-request
+       handler
+       (fn [request]
+         (try
+           (let [component (path-component request component-name)]
+             (cond-> request
+               (some? component)
+               (assoc ext-param-key (read-component component))))
+           (catch Exception _
+             request))))))
 
 
 ;; * meta

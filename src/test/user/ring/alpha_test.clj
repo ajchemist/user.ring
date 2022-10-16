@@ -11,7 +11,22 @@
    [cheshire.core :as cheshire]
 
    [user.ring.alpha :refer :all]
-   ))
+   [ring.util.response :as response]
+
+   [ring.util.request :as request]))
+
+
+(deftest file-or-resource-test
+  (is (nil? (file "/test/assets/index.html")))
+  (is (some? (file-or-resource "/test/assets/index.html")))
+  (is (instance? java.io.File (binding [*context-dir* "src/test"] (file "/test/assets/index.html"))))
+  (is (instance? java.io.File
+                 (:body ((-> (fn [request] (response/response (path-component request "index.html")))
+                           (wrap-context-dir "src/test"))
+                         {:uri "/test/assets/" :request-method :get}))))
+  (is (instance? java.net.URL
+                 (:body ((fn [request] (response/response (path-component request "index.html")))
+                         {:uri "/test/assets/" :request-method :get})))))
 
 
 (deftest test-wrap-meta-response
