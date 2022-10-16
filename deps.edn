@@ -7,11 +7,11 @@
   :provided
   {:extra-deps
    {
-    ring/ring-core          {:mvn/version "1.9.4"}
-    ring/ring-mock          {:mvn/version "0.3.2"}
-    ring/ring-jetty-adapter {:mvn/version "1.9.4"}
+    ring/ring-core          {:mvn/version "1.9.6"}
+    ring/ring-mock          {:mvn/version "0.4.0"}
+    ring/ring-jetty-adapter {:mvn/version "1.9.6"}
     clj-http/clj-http       {:mvn/version "3.12.3"}
-    cheshire/cheshire       {:mvn/version "5.10.0"}
+    cheshire/cheshire       {:mvn/version "5.11.0"}
     integrant/integrant     {:mvn/version "0.8.0"}
     }}
 
@@ -20,62 +20,36 @@
   {:extra-paths ["src/test"]
    :extra-deps
    {
-    clj-chrome-devtools/clj-chrome-devtools {:mvn/version "20180528"}
-    com.taoensso/timbre                     {:mvn/version "5.1.2"}
-    ring/ring-devel                         {:mvn/version "1.9.4"}
-    ring/ring-jetty-adapter                 {:mvn/version "1.9.4"}
-    stylefruits/gniazdo                     {:mvn/version "1.1.1"}
+    clj-chrome-devtools/clj-chrome-devtools {:mvn/version "20220405"}
+    com.taoensso/timbre                     {:mvn/version "5.2.1"}
+    ring/ring-devel                         {:mvn/version "1.9.6"}
+    ring/ring-jetty-adapter                 {:mvn/version "1.9.6"}
+    stylefruits/gniazdo                     {:mvn/version "1.2.1"}
     }}
 
 
   :test-runner
-  {:extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
-   :main-opts  ["-m" "cognitect.test-runner"]
+  {:extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+   :main-opts  ["-m" "cognitect.test-runner" "-d" "src/test"]
    :exec-fn    cognitect.test-runner.api/test
-   :exec-args  {:dirs ["src/test"]}}
+   :exec-args  {:dirs     ["src/test"]
+                :excludes [:deprecated]}}
 
 
   :cljs-test-runner
-  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.7.0"}}
+  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.8.0"}}
    :main-opts  ["-m" "cljs-test-runner.main" "-d" "src/test"]}
 
 
-  :eastwood
-  {:extra-deps {jonase/eastwood {:mvn/version "RELEASE"}}
-   :main-opts  ["-m" "eastwood.lint" {:source-paths ["src/core"] :test-paths ["src/test"]}]}
-
-
-  :github-actions-helper
-  {:extra-deps
-   {
-    rum/rum {:mvn/version "0.12.6"}
-    io.github.ajchemist/telegram.clj {:mvn/version "2021.252.12143"}
-    io.github.ajchemist/github.clj.alpha {:mvn/version "2021.252.17497"}
-    }
-   :ns-default github.core.alpha.actions-helper.api}
-
-
   :build
-  {:deps        {io.github.clojure/tools.build {:git/tag "v0.2.2" :git/sha "3049217"}
-                 user.java.time/user.java.time {:mvn/version "2020.267.10158"}}
-   :extra-paths ["src/test"]
-   :ns-default  build}
+  {:deps
+   {
+    io.github.clojure/tools.build      {:git/tag "v0.8.3" :git/sha "0d20256"}
+    io.github.ajchemist/user.java.time {:mvn/version "2022.75.23671"}
+    }
+   :ns-default build.package}
 
 
   :maven-tool
-  {:extra-deps {io.github.ajchemist/user.apache.maven.alpha {:git/sha "4f70a7a6ed4ab0620c7a0a3a4caf95d33ef916c6"}}
-   :ns-default user.apache.maven.api}
-
-
-  :1.9
-  {:extra-deps
-   {
-    org.clojure/clojure {:mvn/version "1.9.0"}
-    }}
-
-
-  :1.10
-  {:extra-deps
-   {
-    org.clojure/clojure {:mvn/version "1.10.1"}
-    }}}}
+  {:extra-deps {io.github.ajchemist/user.apache.maven.alpha {:mvn/version "2021.252.6975"}}
+   :ns-default user.apache.maven.api}}}
