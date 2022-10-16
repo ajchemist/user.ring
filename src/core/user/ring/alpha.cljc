@@ -7,6 +7,23 @@
        )))
 
 
+(defn path-info
+  [#?(:clj request :default _)]
+  #?(:clj (request/path-info request)
+     :cljs js/location.pathname))
+
+
+;; * fns
+
+
+(defn index-request?
+  [request]
+  (let [path (path-info request)]
+    (or (str/ends-with? path "/")
+        (str/ends-with? path "/index.html")
+        (str/ends-with? path "/index.htm"))))
+
+
 ;; * routing
 
 
@@ -18,6 +35,9 @@
 (defn routes
   [& handlers]
   #(routing % handlers))
+
+
+;;
 
 
 ;; * transform
@@ -134,7 +154,7 @@
 #?(:clj
    (defn path-component
      [request component-name]
-     (let [path        (request/path-info request)
+     (let [path        (path-info request)
            config-path (if (str/ends-with? path "/")
                          (str path component-name)
                          (str path "." component-name))]
