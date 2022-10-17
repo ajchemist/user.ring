@@ -41,4 +41,5 @@
 (defn file-or-resource
   [root-dir path]
   (or (file root-dir path)
-      (jio/resource (strip-left-slash path))))
+      (when (string? path)
+        (jio/resource (strip-left-slash path)))))

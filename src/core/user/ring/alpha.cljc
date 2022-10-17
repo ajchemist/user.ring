@@ -130,6 +130,7 @@
 
 (defn wrap-context-dir
   [handler context-dir]
+  {:pre [(string? context-dir)]}
   (fn
     ([request]
      (binding [*context-dir* context-dir]
@@ -141,14 +142,18 @@
 
 #?(:clj
    (defn file
-     [path]
-     (util/file *context-dir* path)))
+     ([path]
+      (file *context-dir* path))
+     ([root-dir path]
+      (util/file root-dir path))))
 
 
 #?(:clj
    (defn file-or-resource
-     [path]
-     (util/file-or-resource *context-dir* path)))
+     ([path]
+      (file-or-resource *context-dir* path))
+     ([root-dir path]
+      (util/file-or-resource root-dir path))))
 
 
 #?(:clj
