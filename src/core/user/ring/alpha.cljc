@@ -174,11 +174,20 @@
        handler
        (fn [request]
          (try
-           (let [component (or (path-component request component-name) nf)]
-             (cond-> request
-               (some? component)
-               (assoc ext-param-key (read-component component))))
-           (catch Exception _
+           (cond
+             (::path-component? request)
+             (let [component (or (path-component request component-name) nf)]
+               (cond-> request
+                 (some? component)
+                 (assoc
+                   ::path-component component
+                   ext-param-key (read-component component))))
+
+
+             :else
+             request)
+           (catch Exception e
+             (tap> [::wrap-path-component e])
              request))))))
 
 
