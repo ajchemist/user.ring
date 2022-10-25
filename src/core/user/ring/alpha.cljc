@@ -16,16 +16,23 @@
      :cljs js/location.pathname))
 
 
+(defn scheme
+  [request]
+  (or (get-in request [:headers "x-scheme"])
+      (get-in request [:headers "x-forwarded-proto"])
+      (name (:scheme request))))
+
+
+(defn origin-url
+  [request]
+  (str (scheme request) "://" (get-in request [:headers "host"])))
+
+
 (defn request-url
   "Custom ring.util.request/request-url
   Respect X-Scheme, X-Forwarded-Proto"
   [request]
-  (str (or
-         (get-in request [:headers "x-scheme"])
-         (get-in request [:headers "x-forwarded-proto"])
-         (name (:scheme request)))
-       "://"
-       (get-in request [:headers "host"])
+  (str (origin-url request)
        (:uri request)
        (when-let [query (:query-string request)]
          (str "?" query))))
