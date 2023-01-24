@@ -224,7 +224,7 @@
      [handler]
      (letfn [(f [{:keys [body] :as response}]
                (if (instance? clojure.lang.IMeta body)
-                 (with-meta body (dissoc response :body))
+                 (vary-meta body merge (dissoc response :body))
                  response))]
        (fn
          ([request]
